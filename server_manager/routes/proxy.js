@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 const axios = require('axios');
 
-// in the future just host and port number
-// just a list that lists the necessary requests to be made
+
+// list of servers
 var servers = [
     {
         host: 'localhost',
@@ -37,16 +37,7 @@ var servers = [
 router.get('/', async (req, res, next) => {
     try {
 
-        var mostUsers = 0;
         const forwardedServer = await serverScanner();
-
-       /* servers.forEach( (server) => {
-
-            if(server.users > mostUsers) {
-                mostUsers = server.users
-                forwardedServer = server
-            }
-        })*/
 
         
         res.send(forwardedServer);
@@ -58,12 +49,13 @@ router.get('/', async (req, res, next) => {
 
 // loops through making requests to each server for health checks and user number updates
 // returns server that has the most users under 5 users
+// test by running the servers.js file by doing node servers.js 
 const serverScanner = async () => {
-    console.log("hei hei")
-    // 
+     
     let mostUsers = 0;
     let forwardedServer;
     const results = []; 
+
     for (let i = 0; i < servers.length; i++) {
         let server = servers[i]
 
@@ -76,6 +68,7 @@ const serverScanner = async () => {
                 users: response.data.users,
                 status: 'passing'
               });
+              // checking for appropriate server
               users = response.data.users
               if(users > mostUsers & users < 5){
                 mostUsers = users

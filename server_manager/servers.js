@@ -1,3 +1,6 @@
+// for testing routes/proxy.js 
+// run in a separate terminal by doing commmand node server.js
+
 const http = require('http');
 
 const servers = [
