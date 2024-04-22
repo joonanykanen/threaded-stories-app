@@ -5,11 +5,11 @@ const http = require('http');
 
 const servers = [
     { host: 'localhost', port: 3001, users: 1 },
-    { host: 'localhost', port: 8080, users: 2 },
-    { host: 'localhost', port: 5000, users: 2 },
-    { host: 'localhost', port: 1234, users: 5 },
-    { host: 'localhost', port: 9000, users: 3 },
-    { host: 'localhost', port: 7070, users: 4 }
+    { host: 'localhost', port: 8080, users: 5 },
+    { host: 'localhost', port: 5000, users: 4 },
+    { host: 'localhost', port: 1234, users: 3 },
+    { host: 'localhost', port: 9000, users: 4 },
+    { host: 'localhost', port: 7070, users: 2 },
 ];
 
 servers.forEach(server => {

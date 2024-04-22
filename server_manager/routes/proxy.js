@@ -29,23 +29,39 @@ var servers = [
     {
         host: 'localhost',
         port: 7070,
-    }
+    },
+    {
+      host: 'localhost',     
+      port: 6000,             // doesn't exist 
+  }
     
 ];
 
 
 router.get('/', async (req, res, next) => {
+
     try {
 
         const forwardedServer = await serverScanner();
 
+        if(forwardedServer){
+
+          res.send(forwardedServer);
+
+        }else{
+
+          res.send({ msg: "no servers available" });
+
+        }
+        //res.send(forwardedServer);
         
-        res.send(forwardedServer);
+
+
     } catch (error) {
         
         next(error); 
     }
-})
+});
 
 // loops through making requests to each server for health checks and user number updates
 // returns server that has the most users under 5 users
@@ -54,6 +70,7 @@ const serverScanner = async () => {
      
     let mostUsers = 0;
     let forwardedServer;
+    console.log(forwardedServer)
     const results = []; 
 
     for (let i = 0; i < servers.length; i++) {
@@ -64,8 +81,8 @@ const serverScanner = async () => {
             // Check status
             if (response.status === 200) {
               results.push({
-                id: server.port,
-                users: response.data.users,
+                port: server.port,
+                host: server.host,
                 status: 'passing'
               });
               // checking for appropriate server
@@ -77,16 +94,17 @@ const serverScanner = async () => {
               
             } else {
               results.push({
-                id: server.port,
-                users: server.data.users,
+                port: server.port,
+                host: server.host,
                 status: 'failing' 
               });
+
             }
             
           } catch (error) {
             results.push({
-              id: server.port,
-              users: server.data.users,
+              port: server.port,
+              host: server.host,
               status: 'failing'
             });
           }
