@@ -70,7 +70,6 @@ const serverScanner = async () => {
      
     let mostUsers = 0;
     let forwardedServer;
-    console.log(forwardedServer)
     const results = []; 
 
     for (let i = 0; i < servers.length; i++) {
@@ -93,6 +92,7 @@ const serverScanner = async () => {
               }
               
             } else {
+              console.log(response.status)
               results.push({
                 port: server.port,
                 host: server.host,
@@ -102,6 +102,7 @@ const serverScanner = async () => {
             }
             
           } catch (error) {
+            console.log(error.errors)
             results.push({
               port: server.port,
               host: server.host,
