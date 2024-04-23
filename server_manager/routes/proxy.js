@@ -24,28 +24,43 @@ var servers = [
     {
         host: 'localhost',
         port: 9000,
-        users: 4,
     },
     {
         host: 'localhost',
         port: 7070,
-    }
+    },
+    {
+      host: 'localhost',     
+      port: 6000,             // doesn't exist 
+  }
     
 ];
 
 
 router.get('/', async (req, res, next) => {
+
     try {
 
         const forwardedServer = await serverScanner();
 
+        if(forwardedServer){
+
+          res.send(forwardedServer.host);
+
+        }else{
+
+          res.send({ msg: "no servers available" });
+
+        }
+        //res.send(forwardedServer);
         
-        res.send(forwardedServer);
+
+
     } catch (error) {
         
         next(error); 
     }
-})
+});
 
 // loops through making requests to each server for health checks and user number updates
 // returns server that has the most users under 5 users
@@ -54,20 +69,22 @@ const serverScanner = async () => {
      
     let mostUsers = 0;
     let forwardedServer;
-    const results = []; 
+    //const results = []; 
 
     for (let i = 0; i < servers.length; i++) {
         let server = servers[i]
 
         try {
             const response = await axios.get(`http://${server.host}:${server.port}/app/healthcheck`);
+            //const response = await axios.get(`http://${server.host}:3000/healthcheck`);
             // Check status
             if (response.status === 200) {
-              results.push({
-                id: server.port,
-                users: response.data.users,
+              /*results.push({
+                port: server.port,
+                host: server.host,
                 status: 'passing'
-              });
+              });*/
+
               // checking for appropriate server
               users = response.data.users
               if(users > mostUsers & users < 5){
@@ -76,25 +93,28 @@ const serverScanner = async () => {
               }
               
             } else {
-              results.push({
-                id: server.port,
-                users: server.data.users,
+              console.log(response.status)
+              /*results.push({
+                port: server.port,
+                host: server.host,
                 status: 'failing' 
-              });
+              });*/
+
             }
             
           } catch (error) {
-            results.push({
-              id: server.port,
-              users: server.data.users,
+            console.log(error.errors)
+            /*results.push({
+              port: server.port,
+              host: server.host,
               status: 'failing'
-            });
+            });*/
           }
         
 
     }
 
-    console.log(results)
+    //console.log(results)
 
     return forwardedServer
 
