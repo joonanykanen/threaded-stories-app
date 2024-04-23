@@ -24,7 +24,6 @@ var servers = [
     {
         host: 'localhost',
         port: 9000,
-        users: 4,
     },
     {
         host: 'localhost',
@@ -46,7 +45,7 @@ router.get('/', async (req, res, next) => {
 
         if(forwardedServer){
 
-          res.send(forwardedServer);
+          res.send(forwardedServer.host);
 
         }else{
 
@@ -70,20 +69,22 @@ const serverScanner = async () => {
      
     let mostUsers = 0;
     let forwardedServer;
-    const results = []; 
+    //const results = []; 
 
     for (let i = 0; i < servers.length; i++) {
         let server = servers[i]
 
         try {
             const response = await axios.get(`http://${server.host}:${server.port}/app/healthcheck`);
+            //const response = await axios.get(`http://${server.host}:3000/healthcheck`);
             // Check status
             if (response.status === 200) {
-              results.push({
+              /*results.push({
                 port: server.port,
                 host: server.host,
                 status: 'passing'
-              });
+              });*/
+
               // checking for appropriate server
               users = response.data.users
               if(users > mostUsers & users < 5){
@@ -93,27 +94,27 @@ const serverScanner = async () => {
               
             } else {
               console.log(response.status)
-              results.push({
+              /*results.push({
                 port: server.port,
                 host: server.host,
                 status: 'failing' 
-              });
+              });*/
 
             }
             
           } catch (error) {
             console.log(error.errors)
-            results.push({
+            /*results.push({
               port: server.port,
               host: server.host,
               status: 'failing'
-            });
+            });*/
           }
         
 
     }
 
-    console.log(results)
+    //console.log(results)
 
     return forwardedServer
 
