@@ -1,0 +1,15 @@
+.nickname-input-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  form {
+    text-align: center;
+  }
+  
+  input {
+    margin-bottom: 10px;
+  }
+  

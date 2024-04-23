@@ -3,7 +3,7 @@ import React from 'react';
 const StoryGame = () => {
     return (
         <div>
-            {/* Your component content goes here */}
+            Peleille :D
         </div>
     );
 };
