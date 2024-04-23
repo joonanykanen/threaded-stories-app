@@ -38,7 +38,7 @@ router.get('/stories', getWords(Story));
 router.post('/stories', postStory);
 
 //post multiple words
-router.post('/words', postWords(WordModel));
+router.post('/words', postWords);
 
 // Generic GET handler. Returns ALL of the words in the database
 function getWords(Model) {
@@ -55,8 +55,9 @@ function getWords(Model) {
 // Generic POST handler for a single word
 function postWord(Model) {
     return async (req, res) => {
+        // The field should match the schema field, which is 'word', not 'text'
         const item = new Model({
-            text: req.body.text,
+            word: req.body.word, // Changed from text to word
         });
 
         try {
@@ -68,33 +69,51 @@ function postWord(Model) {
     };
 }
 
+
+// selecting the correct place for the post to happen in the database
+function getModelForType(type) {
+    switch (type) {
+        case 'auxiliary':
+            return Auxiliary;
+        case 'explicit':
+            return Explicit;
+        case 'noun':
+            return Noun;
+        case 'preposition':
+            return Preposition;
+        case 'adjective':
+            return Adjective;
+        case 'verb':
+            return Verb;
+        case 'story':
+            return Story;
+        default:
+            return null;
+    }
+}
+
+
 // Generic POST handler for a list of words
-// example postman command 
-//[
-//   { "text": "sky", "type": "noun" },
-//    { "text": "run", "type": "verb" },
-    // ... more word objects
-//]
-function postWords(Model) {
-    return async (req, res) => {
-        // Check if the request body is an array
-        if (!Array.isArray(req.body)) {
-            return res.status(400).json({ message: "Expected an array of word objects." });
+function postWords(req, res) {
+    if (!Array.isArray(req.body)) {
+        return res.status(400).json({ message: "Expected an array of word objects." });
+    }
+
+    const creationPromises = req.body.map(wordData => {
+        const Model = getModelForType(wordData.type);
+        if (!Model) {
+            return Promise.reject(new Error(`Invalid type: ${wordData.type}`));
         }
+        return new Model({ word: wordData.text }).save();
+    });
 
-        // Map each word object to a document creation promise
-        const creationPromises = req.body.map(wordData =>
-            new Model(wordData).save()
-        );
-
-        try {
-            // Wait for all the document creation promises to resolve
-            const newItems = await Promise.all(creationPromises);
+    Promise.all(creationPromises)
+        .then(newItems => {
             res.status(201).json(newItems);
-        } catch (error) {
+        })
+        .catch(error => {
             res.status(400).json({ message: error.message });
-        }
-    };
+        });
 }
 
 // Specific POST handler for stories
