@@ -3,6 +3,7 @@ import './Queue.css';
 
 
 const Queue = ({ inQueue, setInQueue, socket, setStorygame }) => {
+  
   const cancelQueue = () => {
     setInQueue(false);
     socket.disconnect();

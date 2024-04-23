@@ -27,12 +27,24 @@ function App() {
     socket.emit('join-queue', { nickname });
   };
 
+  /* const handleQueue = async () => {
+    setInQueue(true);
+    const response = await fetch('http://localhost:3000/api/server-ip'); // Fetching the IP from server manager
+    const data = await response.json();
+    const socket = socketIOClient(`${data.ip}:4001`); // connecting to game server
+    socket.on('connect', () => {
+      console.log('connected to server');
+    });
+    setSocket(socket);
+    socket.emit('join-queue', { nickname });
+  }; */
+
   return (
     <div className="App">
       {!nickname && <NicknameInput onSubmit={handleNicknameSubmit} />}
       {nickname &&!inQueue && !storygame &&<MainMenu onQueue={handleQueue} nickname={nickname} />}
       {nickname && inQueue && <Queue inQueue={inQueue} setInQueue={setInQueue} socket={socket} setStorygame={setStorygame} />}
-      {nickname && !inQueue && storygame && <Storygame inQueue={inQueue} setStorygame={setStorygame} socket={socket} />}
+      {nickname && !inQueue && storygame && <Storygame setStorygame={setStorygame} socket={socket} nickname={nickname} />}
     </div>
   );
 }
