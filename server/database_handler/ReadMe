@@ -1,0 +1,29 @@
+Posting to the database in a few simple steps using postman or other:
+remember to change between get and post depending on what you wnat to do.
+list of all the post and get commands in the routes folder in the dababase_manager.js file
+
+for single words (just change the end with any word you want to publish(now verbs but could be like nouns, explicit etc)):
+http://localhost:3000/database/verbs
+{
+"word": "test story",
+}
+
+posting a story (just change tittle and and content for new stories):
+http://localhost:3000/database/stories
+
+{
+"title": "test story",
+"content": "this is the test story and jabadabadoo"
+}
+
+posting multiple words at a time
+http://localhost:3000/database/words
+
+[
+{"text": "serene", "type": "adjective"},
+{"text": "will", "type": "auxiliary"},
+{"text": "fuck", "type": "explicit"},
+{"text": "harmony", "type": "noun"},
+{"text": "between", "type": "preposition"},
+{"text": "sing", "type": "verb"}
+]
