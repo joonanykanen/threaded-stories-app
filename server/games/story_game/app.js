@@ -34,7 +34,7 @@ io.on('connection', async (socket) => {
         nicknames.push(data.nickname);
         if (players.length === playercount) {
             io.emit('game-start', nicknames);
-            startGame();
+            startTurn();
         }
       }
     });
@@ -49,7 +49,7 @@ io.on('connection', async (socket) => {
             endGame();
         }
       }
-      startGame();
+      startTurn();
     
   });
 
@@ -62,10 +62,17 @@ io.on('connection', async (socket) => {
   });
 });
 
-async function startGame() {
+async function startTurn() {
   // fetch words from DB
   try {
-    const wordChoices = ["1","2","3","4"]
+    const response = await fetch("http://localhost:3000/database/mixed-words", {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
+    });
+    const wordChoices = await response.json();
     // send to other users the current story and tell whose turn it is
     io.emit('story', { story, player: nicknames[turn]});
     // send words and current story to user, get the new word
@@ -80,7 +87,7 @@ async function endGame() {
   const title = nicknames[0] + " & friends story";
     try {
       //push story to DB
-      /* await fetch("http://localhost:3000/database/stories", {
+      await fetch("http://localhost:3000/database/stories", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -89,7 +96,8 @@ async function endGame() {
           "title": title,
           "content": story
         }
-      }) */
+      })
+
       //send game over
       io.emit('game-over', story);
       
