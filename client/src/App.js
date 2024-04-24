@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NicknameInput from './components/nickname/NicknameInput';
 import MainMenu from './components/main_menu/MainMenu';
 import Queue from './components/queue/Queue';
@@ -22,22 +22,26 @@ function App() {
       const response = await fetch('http://localhost:3000/proxy');
       const data = await response.json();
       console.log(data);
-      setIp(`${data.host}:${data.port}`)
-      console.log(ip);
-      const socketQueue = socketIOClient(`${ip}`);
-      setSocketQueue(socketQueue);
-      setInQueue(true);
-      socketQueue.emit('join-queue');
+      setIp(`${data.host}:${data.port}`);
     } catch (error) {
       console.error('Error fetching IP:', error);
     }
   };
 
+  useEffect(() => {
+    if (ip) {
+      const socketQueue = socketIOClient(`${ip}`);
+      setSocketQueue(socketQueue);
+      setInQueue(true);
+      socketQueue.emit('join-queue');
+    }
+  }, [ip]);
+
   return (
     <div className="App">
       {!nickname && <NicknameInput onSubmit={handleNicknameSubmit} />}
       {nickname &&!inQueue && !storygame &&<MainMenu handleQueue={handleQueue} nickname={nickname} />}
-      {nickname && inQueue && <Queue inQueue={inQueue} setInQueue={setInQueue} socketQueue={socketQueue} setStorygame={setStorygame} setGameSocket={setGameSocket} ip={ip}/>}
+      {nickname && inQueue && <Queue inQueue={inQueue} setInQueue={setInQueue} socketQueue={socketQueue} setStorygame={setStorygame} setGameSocket={setGameSocket} ip={ip} setIp={setIp}/>}
       {nickname && !inQueue && storygame && <Storygame setStorygame={setStorygame} gameSocket={gameSocket} nickname={nickname} />}
     </div>
   );

@@ -3,12 +3,13 @@ import socketIOClient from 'socket.io-client';
 import './Queue.css';
 
 
-const Queue = ({ inQueue, setInQueue, socketQueue, setStorygame, setGameSocket, ip}) => {
+const Queue = ({ inQueue, setInQueue, socketQueue, setStorygame, setGameSocket, ip, setIp}) => {
   const [queueNumber, setQueueNumber] = useState(null);
 
   const cancelQueue = () => {
     setInQueue(false);
     socketQueue.disconnect();
+    setIp("");
   };
 
   useEffect(() => {
