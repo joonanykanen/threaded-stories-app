@@ -29,11 +29,11 @@ var playercount = 5;
 var totalrounds = 3;
 
 io.on('connection', async (socket) => {
+  console.log('A user connected');
   var story = "";
   var turn = 0;
   var newWord = "";
   var rounds = 0;
-  console.log('A user connected');
   var nicknames = [];
   var players = [];
   // Handle getting nicknames
