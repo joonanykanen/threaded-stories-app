@@ -61,10 +61,9 @@ router.get('/', async (req, res, next) => {
         const forwardedServer = await serverScanner();
 
         if(forwardedServer){
-          //console.log(forwardedServer)
-          //console.log(forwardedServer.host)
 
-          res.send(forwardedServer);
+          console.log(forwardedServer.port,forwardedServer.host);
+          res.json({ host: forwardedServer.host, port: forwardedServer.port });
 
         }else{
 
