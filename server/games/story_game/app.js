@@ -25,34 +25,39 @@ app.use('/game', gameRouter);
 
 const PORT = process.env.PORT || 3000;
 
-var story = "";
-var turn = 0;
-var newWord = "";
-var rounds = 0;
 var playercount = 5;
 var totalrounds = 3;
 
-io.on('connection', (socket) => {
-    console.log('A user connected');
-    var nicknames = [];
-    var players = [];
-    var wordChoices = [];
-    // Handle getting nicknames
-    socket.on('give-nickname', () => {
-        if (players.length < playercount) {
-            players.push(socket.id);
-            nicknames.push(socket.data.nickname);
-            if (players.length === playercount) {
-                io.emit('game-start', nicknames);
-            }
+io.on('connection', async (socket) => {
+  var story = "";
+  var turn = 0;
+  var newWord = "";
+  var rounds = 0;
+  console.log('A user connected');
+  var nicknames = [];
+  var players = [];
+  // Handle getting nicknames
+  socket.on('give-nickname', () => {
+    if (players.length < playercount) {
+        players.push(socket.id);
+        nicknames.push(socket.data.nickname);
+        if (players.length === playercount) {
+            io.emit('game-start', nicknames);
         }
+      }
     });
   
   if(nicknames.length === 5) {
     while(true) {
       // fetch words from DB
-      
-      wordChoices = ["a", "b", "c", "d"];
+      const response = await fetch("http://localhost:3000/database/mixed-words", {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json"
+        },
+      });
+      const wordChoices = response.json();
       // send to other users the current story and tell whose turn it is
       io.emit('story', story, nicknames[turn]);
       // send words and current story to user, get the new word
@@ -69,8 +74,19 @@ io.on('connection', (socket) => {
         break; 
       } 
     }
-    //push story to DB
 
+    const title = nicknames[0] + " & friends story";
+    //push story to DB
+    await fetch("http://localhost:3000/database/stories", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: {
+        "title": title,
+        "content": story
+      }
+    })
     //send game over
     io.emit('game-over', story);
   };
