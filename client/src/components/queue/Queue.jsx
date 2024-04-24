@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import socketIOClient from 'socket.io-client';
 import './Queue.css';
 
+
 const Queue = ({ inQueue, setInQueue, socketQueue, setStorygame, setGameSocket, ip}) => {
   const [queueNumber, setQueueNumber] = useState(null);
 
@@ -13,6 +14,8 @@ const Queue = ({ inQueue, setInQueue, socketQueue, setStorygame, setGameSocket, 
   useEffect(() => {
 
     socketQueue.on('game-ready', () => {
+
+      console.log("alkaa");
       const gameSocket = socketIOClient(`${ip}:5000`);
       setGameSocket(gameSocket);
       setInQueue(false);
