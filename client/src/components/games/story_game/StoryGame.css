@@ -1,0 +1,26 @@
+.story-game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .title {
+    margin-top: 0;
+  }
+  
+  .story-game > * {
+    margin: 10px 0;
+  }
+  
+  .word-list {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .word-list > li {
+    margin: 0 5px;
+  }

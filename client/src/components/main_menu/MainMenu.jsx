@@ -1,9 +1,10 @@
 import React from 'react';
 import './MainMenu.css'
 
-const MainMenu = ({ nickname, onQueue }) => {
+const MainMenu = ({ nickname, handleQueue }) => {
+
     const handleClick = async () => {
-        onQueue();
+      handleQueue();
     }
 
     return (
