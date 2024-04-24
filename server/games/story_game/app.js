@@ -39,19 +39,18 @@ io.on('connection', async (socket) => {
       }
     });
     
-    socket.on('submit-word', (word) => {
-      if (socket.id === players[turn]) {
-          story += " " + word;
-          turn = (turn + 1) % playerCount;
-          if (turn === 0) {
-              rounds++;
-              if (rounds === totalrounds) {
-                  endGame();
-              } else {
-                  startGame();
-              }
-          }
+    socket.on('submit-word', (data) => {
+      
+      story += " " + data.word;
+      turn = (turn + 1) % playercount;
+      if (turn === 0) {
+        rounds++;
+        if (rounds === totalrounds) {
+            endGame();
+        }
       }
+      startGame();
+    
   });
 
   socket.on('disconnect', () => {
@@ -70,7 +69,7 @@ async function startGame() {
     // send to other users the current story and tell whose turn it is
     io.emit('story', { story, player: nicknames[turn]});
     // send words and current story to user, get the new word
-    io.emit('give-words', wordChoices);
+    io.emit('give-words', {words: wordChoices});
     } catch (error) {
       console.error('Error fetching words:', error);
   }
@@ -81,7 +80,7 @@ async function endGame() {
   const title = nicknames[0] + " & friends story";
     try {
       //push story to DB
-      await fetch("http://localhost:3000/database/stories", {
+      /* await fetch("http://localhost:3000/database/stories", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -90,7 +89,7 @@ async function endGame() {
           "title": title,
           "content": story
         }
-      })
+      }) */
       //send game over
       io.emit('game-over', story);
       

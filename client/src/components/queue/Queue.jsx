@@ -19,7 +19,6 @@ const Queue = ({ inQueue, setInQueue, socketQueue, setStorygame, setGameSocket, 
   socketQueue.on('game-ready', () => {
 
     const gameSocket = socketIOClient("http://localhost:5000");
-    console.log(gameSocket);
     setGameSocket(gameSocket);
     setInQueue(false);
     setStorygame(true);

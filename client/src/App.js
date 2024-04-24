@@ -21,7 +21,6 @@ function App() {
     try {
       const response = await fetch('http://localhost:3000/proxy');
       const data = await response.json();
-      console.log(data);
       setIp(`${data.host}:${data.port}`);
     } catch (error) {
       console.error('Error fetching IP:', error);
