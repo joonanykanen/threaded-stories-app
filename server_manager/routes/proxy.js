@@ -36,6 +36,23 @@ var servers = [
     
 ];
 
+/*
+var servers = [
+  {
+    host: "game1.nykanen.dev:3000"
+  },
+  {
+    host: "game2.nykanen.dev:3000"
+  },
+  {
+    host: "game3.nykanen.dev:3000"
+  },
+  {
+    host: "game4.nykanen.dev:3000"
+  }
+]
+*/
+
 
 router.get('/', async (req, res, next) => {
 
@@ -44,12 +61,14 @@ router.get('/', async (req, res, next) => {
         const forwardedServer = await serverScanner();
 
         if(forwardedServer){
+          //console.log(forwardedServer)
+          //console.log(forwardedServer.host)
 
-          res.send(forwardedServer.host);
+          res.send(forwardedServer);
 
         }else{
 
-          res.send({ msg: "no servers available" });
+          res.status(503).send({ msg: "no servers available" });
 
         }
         //res.send(forwardedServer);
@@ -67,7 +86,7 @@ router.get('/', async (req, res, next) => {
 // test by running the servers.js file by doing node servers.js 
 const serverScanner = async () => {
      
-    let mostUsers = 0;
+    let mostUsers = -1;
     let forwardedServer;
     //const results = []; 
 
@@ -76,7 +95,7 @@ const serverScanner = async () => {
 
         try {
             const response = await axios.get(`http://${server.host}:${server.port}/app/healthcheck`);
-            //const response = await axios.get(`http://${server.host}:3000/healthcheck`);
+            //const response = await axios.get(`http://${server.host}:3000/user-number`);
             // Check status
             if (response.status === 200) {
               /*results.push({
