@@ -24,16 +24,17 @@ app.use('/users', usersRouter);
 
 const PORT = process.env.PORT || 3000;
 
-var playercount = 5;
-var totalrounds = 3;
+const playercount = 5;
+const totalrounds = 3;
+var story = "";
+var turn = 0;
+var rounds = 0;
+var nicknames = [];
+var players = [];
 
 io.on('connection', async (socket) => {
   console.log('A user connected');
-  var story = "";
-  var turn = 0;
-  var rounds = 0;
-  var nicknames = [];
-  var players = [];
+  
   // Handle getting nicknames
   socket.on('give-nickname', (nickname) => {
     if (players.length < playercount) {
@@ -41,9 +42,11 @@ io.on('connection', async (socket) => {
         nicknames.push(nickname);
         if (players.length === playercount) {
             io.emit('game-start', { players: nicknames });
+            startGame();
         }
       }
     });
+    /*
   if(nicknames.length === 5) {
     while(True) {
       // fetch words from DB
@@ -56,11 +59,11 @@ io.on('connection', async (socket) => {
       });
       const wordChoices = response.json();
       // send to other users the current story and tell whose turn it is
-      io.emit('story', story, nicknames[turn]);
+      io.emit('story', { story, player: nicknames[turn]});
       // send words and current story to user, get the new word
       io.emit('give-words', wordChoices);
-      io.on('submit-word', (data) => {
-        story += " " + data.word;
+      io.on('submit-word', (word) => {
+        story += " " + word;
         turn += 1;
         if(turn == playercount) {
           turn = 0;
@@ -92,9 +95,75 @@ io.on('connection', async (socket) => {
     rounds = 0;
     nicknames = [];
     players = [];
+    
+  };*/
 
-  };
+  socket.on('disconnect', () => {
+    const index = players.indexOf(socket.id);
+    if (index !== -1) {
+        players.splice(index, 1);
+        nicknames.splice(index, 1);
+    }
+  });
 });
+
+async function startGame() {
+  // fetch words from DB
+  try {
+    const response = await fetch("http://localhost:3000/database/mixed-words", {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
+    });
+    const wordChoices = response.json();
+  } catch (error) {
+    console.error('Error fetching words:', error);
+}
+  // send to other users the current story and tell whose turn it is
+  io.emit('story', { story, player: nicknames[turn]});
+  // send words and current story to user, get the new word
+  io.emit('give-words', wordChoices);
+  io.on('submit-word', (word) => {
+    story += " " + word;
+    turn += 1;
+    if(turn == playercount) {
+      turn = 0;
+      rounds += 1;
+    }
+  })
+  if(rounds == totalrounds) {
+    endGame();
+  } 
+}
+
+async function endGame() {
+  const title = nicknames[0] + " & friends story";
+    try {
+      //push story to DB
+      await fetch("http://localhost:3000/database/stories", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: {
+          "title": title,
+          "content": story
+        }
+      })
+      //send game over
+      io.emit('game-over', story);
+      
+      story = "";
+      turn = 0;
+      rounds = 0;
+      nicknames = [];
+      players = [];
+    } catch (error) {
+        console.error('Error posting story:', error);
+    }
+}
 
 server.listen(PORT, () => {
   console.log('Server is running on port 3000');
