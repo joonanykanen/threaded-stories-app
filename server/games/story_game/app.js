@@ -21,7 +21,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/game', gameRouter);
 
 const PORT = process.env.PORT || 3000;
 
@@ -32,23 +31,21 @@ io.on('connection', async (socket) => {
   console.log('A user connected');
   var story = "";
   var turn = 0;
-  var newWord = "";
   var rounds = 0;
   var nicknames = [];
   var players = [];
   // Handle getting nicknames
-  socket.on('give-nickname', () => {
+  socket.on('give-nickname', (nickname) => {
     if (players.length < playercount) {
         players.push(socket.id);
-        nicknames.push(socket.data.nickname);
+        nicknames.push(nickname);
         if (players.length === playercount) {
-            io.emit('game-start', nicknames);
+            io.emit('game-start', { players: nicknames });
         }
       }
     });
-  
   if(nicknames.length === 5) {
-    while(true) {
+    while(True) {
       // fetch words from DB
       const response = await fetch("http://localhost:3000/database/mixed-words", {
         method: "GET",
@@ -62,8 +59,8 @@ io.on('connection', async (socket) => {
       io.emit('story', story, nicknames[turn]);
       // send words and current story to user, get the new word
       io.emit('give-words', wordChoices);
-      socket.on('submit-word', () => {
-        story.push(newWord);
+      io.on('submit-word', (data) => {
+        story += " " + data.word;
         turn += 1;
         if(turn == playercount) {
           turn = 0;
@@ -78,7 +75,7 @@ io.on('connection', async (socket) => {
     const title = nicknames[0] + " & friends story";
     //push story to DB
     await fetch("http://localhost:3000/database/stories", {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
@@ -89,8 +86,18 @@ io.on('connection', async (socket) => {
     })
     //send game over
     io.emit('game-over', story);
+    
+    story = "";
+    turn = 0;
+    rounds = 0;
+    nicknames = [];
+    players = [];
+
   };
 });
 
+server.listen(PORT, () => {
+  console.log('Server is running on port 3000');
+});
 
 module.exports = app;
