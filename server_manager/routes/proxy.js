@@ -6,46 +6,19 @@ const axios = require('axios');
 // list of servers
 var servers = [
     {
-        host: 'localhost',
-        port: 3001,
-    },
-    {
         host: '127.0.0.1',
         port: 8080,
-    },
-    {
-        host: 'localhost',
-        port: 5000,
-    },
-    {
-        host: 'localhost',
-        port: 1234,
-    },
-    {
-        host: 'localhost',
-        port: 9000,
-    },
-    {
-        host: 'localhost',
-        port: 7070,
-    },
-    {
-      host: 'localhost',     
-      port: 6000,             // doesn't exist 
-  }
-    
+    }
 ];
 
 
 router.get('/', async (req, res, next) => {
 
     try {
-
         const forwardedServer = await serverScanner();
-
         if(forwardedServer){
-
-          res.send(forwardedServer.host);
+          console.log(forwardedServer.port,forwardedServer.host);
+          res.json({ host: forwardedServer.host, port: forwardedServer.port });
 
         }else{
 
@@ -67,7 +40,7 @@ router.get('/', async (req, res, next) => {
 // test by running the servers.js file by doing node servers.js 
 const serverScanner = async () => {
      
-    let mostUsers = 0;
+    let mostUsers = -1;
     let forwardedServer;
     //const results = []; 
 

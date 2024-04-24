@@ -25,6 +25,7 @@ const Queue = ({ inQueue, setInQueue, socketQueue, setStorygame, setGameSocket, 
     });
 
     socketQueue.on('queue-number', (data) => {
+      console.log(data);
       setQueueNumber(data.queueNumber);
     });
 

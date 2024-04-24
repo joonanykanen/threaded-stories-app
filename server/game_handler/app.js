@@ -6,7 +6,14 @@ const createAppRouter = require('./routes/appRouter');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, {
+    cors: {
+      origin: '*',
+      methods: ['GET', 'POST'],
+      allowedHeaders: ['my-custom-header'],
+      credentials: true
+    }
+  });
 
 const PORT = process.env.PORT || 8080;
 
