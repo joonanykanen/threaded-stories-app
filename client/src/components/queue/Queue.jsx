@@ -12,24 +12,20 @@ const Queue = ({ inQueue, setInQueue, socketQueue, setStorygame, setGameSocket, 
     setIp("");
   };
 
-  useEffect(() => {
+  socketQueue.on('queue-number', (data) => {
+    setQueueNumber(data);
+  });
 
-    socketQueue.on('game-ready', () => {
+  socketQueue.on('game-ready', () => {
 
-      console.log("alkaa");
-      const gameSocket = socketIOClient(`${ip}:5000`);
-      setGameSocket(gameSocket);
-      setInQueue(false);
-      setStorygame(true);
-      socketQueue.disconnect();
-    });
+    const gameSocket = socketIOClient("http://localhost:5000");
+    console.log(gameSocket);
+    setGameSocket(gameSocket);
+    setInQueue(false);
+    setStorygame(true);
+    socketQueue.disconnect();
+  });
 
-    socketQueue.on('queue-number', (data) => {
-      console.log(data);
-      setQueueNumber(data.queueNumber);
-    });
-
-  }, [socketQueue, setInQueue, setStorygame]);
 
   return (
     <div className={`queue ${inQueue ? 'active' : ''}`}>

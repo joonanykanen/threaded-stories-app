@@ -13,19 +13,23 @@ const StoryGame = ( {setStorygame, gameSocket, nickname} ) => {
     useEffect(() => {
       // Sending the clients nickname to backend.
       gameSocket.emit('give-nickname', { nickname });
-  }, [gameSocket, nickname]);
+  }, []);
 
     // Get the info that it's players turn and get new words.
     gameSocket.on('give-words', (data) => {
+      console.log(data);
       setWords(data.words)
     });
+
     // Game starts and client gets all the player nicknames.
     gameSocket.on('game-start', (data) => {
-      setPlayers(data.players);
+      console.log(data)
+      setPlayers(data);
     });
 
     // Getting updated story and nickname of whose turn it is.
     gameSocket.on('story', (data) => {
+      console.log(data);
       setStory(data.story)
       setCurrentPlayer(data.player)
     });
