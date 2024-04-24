@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
       
       wordChoices = ["a", "b", "c", "d"];
       // send to other users the current story and tell whose turn it is
-      io.emit('story', story, nicknames[turn])
+      io.emit('story', story, nicknames[turn]);
       // send words and current story to user, get the new word
       io.emit('give-words', wordChoices);
       socket.on('submit-word', () => {
