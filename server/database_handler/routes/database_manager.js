@@ -55,9 +55,8 @@ function getWords(Model) {
 // Generic POST handler for a single word
 function postWord(Model) {
     return async (req, res) => {
-        // The field should match the schema field, which is 'word', not 'text'
         const item = new Model({
-            word: req.body.word, // Changed from text to word
+            word: req.body.word,
         });
 
         try {
@@ -152,7 +151,6 @@ router.get('/mixed-words', async (req, res) => {
             getRandomWords(Verb, 2)
         ]);
 
-        // Flatten the array of arrays and remove any undefined (for types not queried)
         const wordsList = mixedWords.flat().filter(Boolean);
 
         res.status(200).json(wordsList);
