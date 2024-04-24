@@ -19,11 +19,13 @@ function App() {
 
   const handleQueue = async () => {
     setInQueue(true);
-    const response = await fetch('lb.nykanen.dev:3000'); // Fetching the IP from server manager
+    const response = await fetch('127.0.0.1:3000/proxy'); // Fetching the IP from server manager
     const data = await response.json();
+
     // Setting IP and connecting to queue socket.
     setIp(data.host);
-    const socketQueue = socketIOClient(`${ip}:3000`);
+    console.log(ip)
+    const socketQueue = socketIOClient(`${ip}:3001`);
     setSocketQueue(socketQueue);
     // Notifying that new client is in queue.
     socketQueue.emit('join-queue');
@@ -33,7 +35,7 @@ function App() {
     <div className="App">
       {!nickname && <NicknameInput onSubmit={handleNicknameSubmit} />}
       {nickname &&!inQueue && !storygame &&<MainMenu handleQueue={handleQueue} nickname={nickname} />}
-      {nickname && inQueue && <Queue inQueue={inQueue} setInQueue={setInQueue} socketQueue={socketQueue} setStorygame={setStorygame} setGameSocket={setGameSocket} ip={ip}/>}
+      {nickname && inQueue && ip && <Queue inQueue={inQueue} setInQueue={setInQueue} socketQueue={socketQueue} setStorygame={setStorygame} setGameSocket={setGameSocket} ip={ip}/>}
       {nickname && !inQueue && storygame && <Storygame setStorygame={setStorygame} gameSocket={gameSocket} nickname={nickname} />}
     </div>
   );
