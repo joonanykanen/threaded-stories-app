@@ -22,7 +22,6 @@ http://localhost:3000/database/words
 [
 {"text": "serene", "type": "adjective"},
 {"text": "will", "type": "auxiliary"},
-{"text": "fuck", "type": "explicit"},
 {"text": "harmony", "type": "noun"},
 {"text": "between", "type": "preposition"},
 {"text": "sing", "type": "verb"}
