@@ -65,7 +65,7 @@ io.on('connection', async (socket) => {
 async function startTurn() {
   // fetch words from DB
   try {
-    const response = await fetch("http://localhost:3000/database/mixed-words", {
+    const response = await fetch("http://localhost:2000/database/mixed-words", {
       method: "GET",
       mode: "cors",
       headers: {
@@ -92,7 +92,7 @@ async function endGame() {
   const title = nicknames[0] + " & friends story";
     try {
       //push story to DB
-      await fetch("http://localhost:3000/database/stories", {
+      await fetch("http://localhost:2000/database/stories", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
