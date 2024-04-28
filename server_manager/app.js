@@ -10,21 +10,18 @@ var proxyRouter = require('./routes/proxy');
 
 var app = express();
 
-if(process.env.NODE_ENV === "development"){
-    var corsOptions = {
-        origin: "http://localhost:3000",
-        optionsSuccessStatus:200,
-    }
-
-}
-
-app.use(cors(corsOptions))
+app.use(cors());
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next();
+  });
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
