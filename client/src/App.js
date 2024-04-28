@@ -29,7 +29,7 @@ function App() {
 
   useEffect(() => {
     if (ip) {
-      const socketQueue = socketIOClient(`${ip}:3000`);
+      const socketQueue = socketIOClient(`${ip}:3001`);
       setSocketQueue(socketQueue);
       setInQueue(true);
       socketQueue.emit('join-queue');
