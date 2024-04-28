@@ -6,15 +6,15 @@ const axios = require('axios');
 // list of servers
 const servers = [
   {
-      host: 'game1.nykanen.dev',
+      host: 'https://game1.nykanen.dev',
       port: 3000,
   },
   {
-    host: 'game2.nykanen.dev',
+    host: 'https://game2.nykanen.dev',
     port: 3000,
   },
   {
-    host: 'game3.nykanen.dev',
+    host: 'https://game3.nykanen.dev',
     port: 3000,
   }
 ];

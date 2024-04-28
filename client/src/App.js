@@ -19,7 +19,7 @@ function App() {
 
   const handleQueue = async () => {
     try {
-      const response = await fetch('lb.nykanen.dev:3000/proxy');
+      const response = await fetch('https://lb.nykanen.dev/proxy');
       const data = await response.json();
       setIp(`${data.host}`);
     } catch (error) {
