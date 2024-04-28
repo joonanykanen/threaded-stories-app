@@ -18,7 +18,7 @@ const Queue = ({ inQueue, setInQueue, socketQueue, setStorygame, setGameSocket, 
 
   socketQueue.on('game-ready', () => {
 
-    const gameSocket = socketIOClient(`${ip}:5000`);
+    const gameSocket = socketIOClient(`${ip}:5001`);
     setGameSocket(gameSocket);
     setInQueue(false);
     setStorygame(true);
