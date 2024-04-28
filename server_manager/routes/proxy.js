@@ -19,24 +19,6 @@ const servers = [
   }
 ];
 
-/*
-var servers = [
-  {
-    host: "game1.nykanen.dev:3000"
-  },
-  {
-    host: "game2.nykanen.dev:3000"
-  },
-  {
-    host: "game3.nykanen.dev:3000"
-  },
-  {
-    host: "game4.nykanen.dev:3000"
-  }
-]
-*/
-
-
 router.get('/', async (req, res, next) => {
 
     try {
@@ -74,7 +56,7 @@ const serverScanner = async () => {
         let server = servers[i]
 
         try {
-            const response = await axios.get(`http://${server.host}:${server.port}/app/healthcheck`);
+            const response = await axios.get(`${server.host}:${server.port}/app/healthcheck`);
             //const response = await axios.get(`http://${server.host}:3000/user-number`);
             // Check status
             if (response.status === 200) {
