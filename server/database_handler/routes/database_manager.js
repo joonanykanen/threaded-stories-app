@@ -151,7 +151,7 @@ router.get('/mixed-words', async (req, res) => {
             getRandomWords(Verb, 2)
         ]);
 
-        const wordsList = mixedWords.flat().filter(Boolean);
+        const wordsList = mixedWords.flat().map(doc => doc.word).filter(Boolean);
 
         res.status(200).json(wordsList);
     } catch (error) {
