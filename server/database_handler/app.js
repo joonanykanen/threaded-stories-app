@@ -18,7 +18,7 @@ const Story = require('./models/Story');
 const Verb = require('./models/Verb');
 
 //connecting to database
-const mongoDB = "mongodb://127.0.0.1:27017/testdb";
+const mongoDB = "mongodb://127.0.0.1:27017/db";
 mongoose.connect(mongoDB);
 mongoose.Promise = Promise;
 const db = mongoose.connection;

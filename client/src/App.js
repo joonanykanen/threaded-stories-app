@@ -19,9 +19,9 @@ function App() {
 
   const handleQueue = async () => {
     try {
-      const response = await fetch('http://localhost:3000/proxy');
+      const response = await fetch('http://lb.nykanen.dev:3000/proxy');
       const data = await response.json();
-      setIp(`${data.host}:${data.port}`);
+      setIp(`${data.host}`);
     } catch (error) {
       console.error('Error fetching IP:', error);
     }
@@ -29,7 +29,7 @@ function App() {
 
   useEffect(() => {
     if (ip) {
-      const socketQueue = socketIOClient(`${ip}`);
+      const socketQueue = socketIOClient(`${ip}:3000`);
       setSocketQueue(socketQueue);
       setInQueue(true);
       socketQueue.emit('join-queue');

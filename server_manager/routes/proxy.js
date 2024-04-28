@@ -4,11 +4,19 @@ const axios = require('axios');
 
 
 // list of servers
-var servers = [
-    {
-        host: '127.0.0.1',
-        port: 8080,
-    }
+const servers = [
+  {
+      host: 'game1.nykanen.dev',
+      port: 3000,
+  },
+  {
+    host: 'game2.nykanen.dev',
+    port: 3000,
+  },
+  {
+    host: 'game3.nykanen.dev',
+    port: 3000,
+  }
 ];
 
 

@@ -73,6 +73,11 @@ async function startTurn() {
       },
     });
     const wordChoices = await response.json();
+
+    if (!wordChoices) {
+      wordChoices = ["error", "fetching", "words", "this", "time"];
+    }
+
     // send to other users the current story and tell whose turn it is
     io.emit('story', { story, player: nicknames[turn]});
     // send words and current story to user, get the new word
