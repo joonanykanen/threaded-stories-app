@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import socketIOClient from 'socket.io-client';
 import './Queue.css';
-import socketIOClient from 'socket.io-client';
 
 
 const Queue = ({ inQueue, setInQueue, socketQueue, setStorygame, setGameSocket, ip, setIp}) => {
