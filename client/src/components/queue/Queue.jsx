@@ -1,30 +1,31 @@
 import React, { useState, useEffect } from 'react';
+import socketIOClient from 'socket.io-client';
 import './Queue.css';
 import socketIOClient from 'socket.io-client';
 
-const Queue = ({ inQueue, setInQueue, socketQueue, setStorygame, setGameSocket, ip}) => {
+
+const Queue = ({ inQueue, setInQueue, socketQueue, setStorygame, setGameSocket, ip, setIp}) => {
   const [queueNumber, setQueueNumber] = useState(null);
 
   const cancelQueue = () => {
     setInQueue(false);
     socketQueue.disconnect();
+    setIp("");
   };
 
-  useEffect(() => {
+  socketQueue.on('queue-number', (data) => {
+    setQueueNumber(data);
+  });
 
-    socketQueue.on('game-ready', () => {
-      const gameSocket = socketIOClient(`${ip}:5000`);
-      setGameSocket(gameSocket);
-      setInQueue(false);
-      setStorygame(true);
-      socketQueue.disconnect();
-    });
+  socketQueue.on('game-ready', () => {
 
-    socketQueue.on('queue-number', (data) => {
-      setQueueNumber(data.queueNumber);
-    });
+    const gameSocket = socketIOClient(`${ip}:5000`);
+    setGameSocket(gameSocket);
+    setInQueue(false);
+    setStorygame(true);
+    socketQueue.disconnect();
+  });
 
-  }, [socketQueue, setInQueue, setStorygame]);
 
   return (
     <div className={`queue ${inQueue ? 'active' : ''}`}>

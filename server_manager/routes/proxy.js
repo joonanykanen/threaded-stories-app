@@ -4,36 +4,19 @@ const axios = require('axios');
 
 
 // list of servers
-var servers = [
-    {
-        host: 'localhost',
-        port: 3001,
-    },
-    {
-        host: 'localhost',
-        port: 8080,
-    },
-    {
-        host: 'localhost',
-        port: 5000,
-    },
-    {
-        host: 'localhost',
-        port: 1234,
-    },
-    {
-        host: 'localhost',
-        port: 9000,
-    },
-    {
-        host: 'localhost',
-        port: 7070,
-    },
-    {
-      host: 'localhost',     
-      port: 6000,             // doesn't exist 
+const servers = [
+  {
+      host: 'game1.nykanen.dev',
+      port: 3000,
+  },
+  {
+    host: 'game2.nykanen.dev',
+    port: 3000,
+  },
+  {
+    host: 'game3.nykanen.dev',
+    port: 3000,
   }
-    
 ];
 
 /*
@@ -57,9 +40,7 @@ var servers = [
 router.get('/', async (req, res, next) => {
 
     try {
-
         const forwardedServer = await serverScanner();
-
         if(forwardedServer){
 
           console.log(forwardedServer.port,forwardedServer.host);
