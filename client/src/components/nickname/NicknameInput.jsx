@@ -16,6 +16,7 @@ const NicknameInput = ({ onSubmit }) => {
 
   return (
     <div className="nickname-input-container">
+      <h1 className="title">Threaded Stories</h1>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
