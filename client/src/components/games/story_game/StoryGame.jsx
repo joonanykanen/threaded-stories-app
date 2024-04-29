@@ -70,14 +70,15 @@ const StoryGame = ( {setStorygame, gameSocket, nickname} ) => {
       <div className="story-game">
         {!gameOver && (
           <div>
-            <h1 className="title">Story Game</h1>
+            <h1 className="title">Threaded Stories</h1>
             <p className="story">{story}</p>
             <div className="players">
+              <p>Players:</p>
               {players.map((player, index) => (
                 <p key={index} className={player === currentPlayer ? 'current-player' : ''}>{player}</p>
               ))}
             </div>
-            <p className="current-player">{currentPlayer} turn</p>
+            <p className="current-player">{currentPlayer}'s turn</p>
             <ul className="word-list">
               {renderWords()}
             </ul>
@@ -85,7 +86,7 @@ const StoryGame = ( {setStorygame, gameSocket, nickname} ) => {
         )}
         {gameOver && (
           <div className="game-over">
-            <h2>Game Over</h2>
+            <h1>Game Over</h1>
             <p>The final story is:</p>
             <p>{story}</p>
             <button onClick={handleBackToMainMenu}>Back to Main Menu</button>
